@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>مرحله ۶ — آزمون مجموعه‌ها</title>
+<style>
+  :root{
+    --bg:#071028; --card:#0f2336; --accent:#66f0ff; --gold:#ffd67c;
+    --good:#7ef3b0; --bad:#ff7b7b; --muted:#aee9f3aa;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:22px; font-family: Vazirmatn, system-ui;
+    background: linear-gradient(180deg,#041022,#071429);
+    color:#e8fbff; text-align:center;
+  }
+  h1{ margin:6px 0 10px; color:var(--accent); }
+
+  .container{ max-width:980px; margin:14px auto 60px; padding:16px; text-align:right; }
+
+  /* venn */
+  .ven{ position:relative; height:340px; margin:18px auto; width:100%; max-width:760px; }
+  .circle{ position:absolute; width:320px; height:320px; border-radius:50%; top:10px; }
+  #A { left: calc(50% - 240px); background: rgba(20,50,90,0.08); border:2px solid rgba(120,170,255,0.18); }
+  #B { left: calc(50% - 120px);  background: rgba(20,50,90,0.06); border:2px solid rgba(140,200,180,0.12); }
+
+  .label{ position:absolute; top:10px; font-weight:900; color:#ffeaa8; font-size:18px; }
+  .label.A{ left: calc(50% - 240px + 18px); }
+  .label.B{ left: calc(50% - 120px + 260px); }
+
+  .slot{ position:absolute; font-weight:900; color:#eafcff; font-size:18px; user-select:none; transform:translate(-50%,-50%); }
+  .slot.inter{ color:#ffd; }
+
+  .quiz{ margin-top:12px; display:grid; gap:12px; }
+  .card{ background:var(--card); padding:12px; border-radius:10px; text-align:right; }
+  .question{ font-weight:800; margin-bottom:8px; color:#dff; }
+
+  .braces{ font-weight:900; color:#ffd; display:inline-flex; align-items:center; gap:8px; direction:ltr; }
+  .brace-open, .brace-close{ color:var(--gold); font-size:20px; }
+  .num-input{ min-width:140px; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); color:#e8fbff; text-align:left; font-weight:800; direction:ltr; }
+
+  .tf { display:flex; gap:12px; margin-top:6px; }
+  .tf button{ padding:8px 12px; border-radius:10px; background:transparent; color:#e8fbff; cursor:pointer; border:1px solid rgba(255,255,255,0.06); }
+  .tf button.selected{ background:linear-gradient(90deg,#02363b, #053a4a); }
+
+  .controls{ display:flex; gap:12px; justify-content:center; margin-top:14px; }
+  .btn{ padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:900; color:#022; background:linear-gradient(90deg,#66f0ff,#9ef4c8); border:none; }
+  .btn.ghost{ background:transparent; color:#9feaff; border:1px solid rgba(159,238,248,0.12); }
+
+  .timer{ font-weight:900; color:var(--gold); }
+
+  .results{ margin-top:16px; text-align:right; }
+  .result-line{ display:flex; gap:10px; justify-content:space-between; padding:8px 10px; border-radius:8px; background: rgba(0,0,0,0.06); margin-bottom:8px; }
+  .ok{ color:var(--good); font-weight:900; }
+  .nok{ color:var(--bad); font-weight:900; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>مرحله ۶ — آزمون ترکیبی مجموعه‌ها</h1>
+    <p style="color:#aee9f3aa">زمان: <span class="timer" id="timer">05:00</span></p>
+
+    <!-- Venn -->
+    <div class="ven">
+      <div id="A" class="circle"></div>
+      <div id="B" class="circle"></div>
+
+      <div class="label A">A</div>
+      <div class="label B">B</div>
+
+      <div class="slot" style="left: calc(50% - 240px + 80px); top:170px">۱</div>
+      <div class="slot" style="left: calc(50% - 240px + 120px); top:220px">۲</div>
+      <div class="slot" style="left: calc(50% - 240px + 100px); top:120px">۹</div>
+
+      <div class="slot inter" style="left:50%; top:160px">۳</div>
+      <div class="slot inter" style="left:54%; top:200px">۴</div>
+      <div class="slot inter" style="left:48%; top:240px">۵</div>
+
+      <div class="slot" style="left: calc(50% - 120px + 220px); top:130px">۶</div>
+      <div class="slot" style="left: calc(50% - 120px + 260px); top:230px">۷</div>
+    </div>
+
+    <!-- quiz -->
+    <div class="quiz" id="quizArea">
+
+      <div class="card" id="q1">
+        <div class="question">الف) محاسبه کنید: <strong dir="ltr">B − A</strong></div>
+        <div style="direction:ltr; display:flex; gap:8px; justify-content:flex-end;">
+          <div class="braces">
+            <span class="brace-open">{</span>
+            <input id="q1-input" class="num-input" />
+            <span class="brace-close">}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="q2">
+        <div class="question">ب) مقدار زیر را وارد کنید: <strong dir="ltr">n(A ∪ B)</strong></div>
+        <div style="direction:ltr; display:flex; gap:8px; justify-content:flex-end;">
+          <input id="q2-input" class="num-input" />
+        </div>
+      </div>
+
+      <div class="card" id="q3">
+        <div class="question">ج) محاسبه کنید: <strong dir="ltr">(A − B) ∪ (A ∩ B)</strong></div>
+        <div style="direction:ltr; display:flex; gap:8px; justify-content:flex-end;">
+          <div class="braces">
+            <span class="brace-open">{</span>
+            <input id="q3-input" class="num-input" />
+            <span class="brace-close">}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="q4">
+        <div class="question">د) عبارت زیر درست یا نادرست است؟ <strong dir="ltr">{1,4} ∈ A</strong></div>
+        <div class="tf">
+          <button id="q4-true">درست</button>
+          <button id="q4-false">نادرست</button>
+        </div>
+      </div>
+
+      <div class="card" id="q5">
+        <div class="question">ه) عبارت زیر درست یا نادرست است؟ <strong dir="ltr">7 ∈ B</strong></div>
+        <div class="tf">
+          <button id="q5-true">درست</button>
+          <button id="q5-false">نادرست</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="startBtn">شروع / ریست</button>
+      <button class="btn ghost" id="finishBtn">پایان آزمون</button>
+    </div>
+
+    <div id="resultsArea" class="results"></div>
+
+  </div>
+
+<script>
+const correctAnswers = {
+  q1: [6,7],
+  q2: 8,
+  q3: [1,2,3,4,5,9],
+  q4: false,
+  q5: true
+};
+
+let selectedQ4 = null;
+let selectedQ5 = null;
+
+const q4True = document.getElementById("q4-true");
+const q4False = document.getElementById("q4-false");
+const q5True = document.getElementById("q5-true");
+const
